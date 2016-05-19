@@ -1,0 +1,5 @@
+*.swp
+.idea
+*.js.map
+app/**/*.js
+node_modules
