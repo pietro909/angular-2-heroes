@@ -13,18 +13,36 @@ import { HeroService } from './hero.service';
 
 export class HeroesComponent implements OnInit {
 
-    title = 'Tour of Heroes';
-
     heroes: Hero[];
 
     selectedHero: Hero;
 
+    addingHero = false;
+
+    error: any;
+
     constructor(
         private router: Router,
-        private heroService: HeroService) { }
+        private heroService: HeroService
+    ) { }
 
     getHeroes() {
-        this.heroService.getHeroes().then(heroes => this.heroes = heroes);
+        this.heroService
+            .getHeroes()
+            .then(heroes => this.heroes = heroes)
+            .catch(error => this.error = error);
+    }
+
+    addHero() {
+        this.addingHero = true;
+        this.selectedHero = null;
+    }
+
+    close(savedHero: Hero) {
+        this.addingHero = false;
+        if (savedHero) {
+            this.getHeroes();
+        }
     }
 
     ngOnInit() {
@@ -35,6 +53,16 @@ export class HeroesComponent implements OnInit {
 
     gotoDetail() {
         this.router.navigate(['HeroDetail', { id: this.selectedHero.id }])
+    }
+
+    delete(hero: Hero, event: any) {
+        event.stopPropagation();
+        this.heroService
+            .delete(hero)
+            .then(res => {
+                this.heroes = this.heroes.filter(h => h.id !== hero.id);
+            })
+        .catch(error => this.error = error);
     }
 
 }
