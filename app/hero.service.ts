@@ -28,14 +28,14 @@ export class HeroService {
         );
     }
 
-    save(hero: Hero): Promise<Hero>  {
+    save(hero: Hero): Promise<Hero> {
         if (hero.id) {
             return this.put(hero);
         }
         return this.post(hero);
     }
 
-    delete(hero: Hero): Promise<Hero> {
+    delete(hero: Hero) {
         const headers = new Headers({
             'Content-Type': 'application/json'
         });
@@ -73,7 +73,7 @@ export class HeroService {
         return this.http
             .put(url, JSON.stringify(hero), {headers: headers})
             .toPromise()
-            .then(res => res.json().data)
+            .then(() => hero)
             .catch(this.handleError);
     }
 
